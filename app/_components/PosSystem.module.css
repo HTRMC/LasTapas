@@ -1,0 +1,342 @@
+/* app/_components/PosSystem.module.css */
+
+.container {
+  padding: 1rem;
+  max-width: 72rem;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 1.875rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+}
+
+.tableGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.tableCard {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tableCard:hover {
+  transform: translateY(-2px);
+}
+
+.tableCardActive {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.tableCardInactive {
+  background-color: #f3f4f6;
+}
+
+.tableCardInactive:hover {
+  background-color: #e5e7eb;
+}
+
+.orderSection {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+}
+
+.orderHeader {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.orderList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.orderCard {
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 1rem;
+}
+
+.orderInfo {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.orderNumber {
+  font-weight: bold;
+}
+
+.orderTime {
+  color: #6b7280;
+}
+
+.itemList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.itemName {
+  font-weight: 500;
+}
+
+.quantity {
+  color: #6b7280;
+}
+
+.totalSection {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.totalRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.buttonGroup {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.pay.payButton {
+background-color: #3b82f6;
+color: white;
+padding: 1rem;
+border-radius: 0.5rem;
+font-weight: 500;
+transition: background-color 0.2s ease;
+}
+
+.payButton:hover {
+background-color: #2563eb;
+}
+
+.payButton:disabled {
+background-color: #9ca3af;
+cursor: not-allowed;
+}
+
+.printButton {
+background-color: #f3f4f6;
+padding: 1rem;
+border-radius: 0.5rem;
+font-weight: 500;
+transition: background-color 0.2s ease;
+}
+
+.printButton:hover {
+background-color: #e5e7eb;
+}
+
+.processingOverlay {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background-color: rgba(0, 0, 0, 0.5);
+display: flex;
+justify-content: center;
+align-items: center;
+z-index: 50;
+}
+
+.processingContent {
+background-color: white;
+padding: 2rem;
+border-radius: 0.5rem;
+text-align: center;
+}
+
+.processingSpinner {
+border: 4px solid #f3f4f6;
+border-top: 4px solid #3b82f6;
+border-radius: 50%;
+width: 40px;
+height: 40px;
+animation: spin 1s linear infinite;
+margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+0% { transform: rotate(0deg); }
+100% { transform: rotate(360deg); }
+}
+
+.container {
+padding: 1rem;
+max-width: 72rem;
+margin: 0 auto;
+}
+
+.title {
+font-size: 1.875rem;
+font-weight: bold;
+margin-bottom: 1.5rem;
+}
+
+.tableGrid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+gap: 1rem;
+margin-bottom: 1.5rem;
+}
+
+.tableCard {
+padding: 1rem;
+border-radius: 0.5rem;
+text-align: center;
+cursor: pointer;
+transition: all 0.2s ease;
+}
+
+.tableCard:hover {
+transform: translateY(-2px);
+}
+
+.tableCardActive {
+background-color: #3b82f6;
+color: white;
+}
+
+.tableCardInactive {
+background-color: #f3f4f6;
+}
+
+.tableCardInactive:hover {
+background-color: #e5e7eb;
+}
+
+.orderSection {
+background-color: white;
+border-radius: 0.5rem;
+box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+padding: 1.5rem;
+}
+
+.orderHeader {
+font-size: 1.5rem;
+font-weight: bold;
+margin-bottom: 1rem;
+}
+
+.orderList {
+display: flex;
+flex-direction: column;
+gap: 1.5rem;
+}
+
+.orderCard {
+border-bottom: 1px solid #e5e7eb;
+padding-bottom: 1rem;
+}
+
+.orderInfo {
+display: flex;
+justify-content: space-between;
+margin-bottom: 0.5rem;
+}
+
+.orderNumber {
+font-weight: bold;
+}
+
+.orderTime {
+color: #6b7280;
+}
+
+.itemList {
+display: flex;
+flex-direction: column;
+gap: 0.5rem;
+}
+
+.item {
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+
+.itemName {
+font-weight: 500;
+}
+
+.quantity {
+color: #6b7280;
+}
+
+.totalSection {
+margin-top: 1.5rem;
+padding-top: 1rem;
+border-top: 1px solid #e5e7eb;
+}
+
+.totalRow {
+display: flex;
+justify-content: space-between;
+font-size: 1.25rem;
+font-weight: bold;
+}
+
+.buttonGroup {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 1rem;
+margin-top: 1rem;
+}
+
+.notificationBadge {
+position: absolute;
+top: -8px;
+right: -8px;
+background-color: #ef4444;
+color: white;
+border-radius: 9999px;
+padding: 0.25rem 0.5rem;
+font-size: 0.75rem;
+font-weight: bold;
+min-width: 20px;
+text-align: center;
+}
+
+.receiptWindow {
+font-family: monospace;
+white-space: pre;
+padding: 2rem;
+}
+
+.errorMessage {
+color: #ef4444;
+margin-top: 0.5rem;
+text-align: center;
+}
+
+.successMessage {
+color: #10b981;
+margin-top: 0.5rem;
+text-align: center;
+}

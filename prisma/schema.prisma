@@ -1,0 +1,36 @@
+// File: prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url       = env("DATABASE_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+model Submission {
+  id        Int      @id @default(autoincrement())
+  content   String
+  createdAt DateTime @default(now())
+}
+
+model Order {
+  id        Int         @id @default(autoincrement())
+  tableNumber Int
+  createdAt DateTime    @default(now())
+  items     OrderItem[]
+  isPaid      Boolean     @default(false)
+  paidAt      DateTime?
+}
+
+model OrderItem {
+  id       Int    @id @default(autoincrement())
+  orderId  Int
+  order    Order  @relation(fields: [orderId], references: [id])
+  dishId   Int
+  dishName String
+  quantity Int
+  price    Decimal @default(0)
+}

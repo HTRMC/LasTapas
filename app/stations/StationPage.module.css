@@ -1,0 +1,89 @@
+/* File: app/stations/StationPage.module.css */
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.title {
+  text-align: center;
+  color: var(--red);
+  font-family: 'Gardablack', cursive;
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+}
+
+.orderList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.orderCard {
+  background-color: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.orderHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--light-blue);
+}
+
+.orderNumber {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--red);
+}
+
+.orderTime {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.itemList {
+  list-style: none;
+  padding: 0;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.itemName {
+  font-weight: 500;
+}
+
+.quantity {
+  background-color: var(--light-blue);
+  color: var(--red);
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-weight: bold;
+}
+
+.completeButton {
+  width: 100%;
+  padding: 10px;
+  background-color: var(--red);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  margin-top: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.completeButton:hover {
+  background-color: #8B0000;
+}
