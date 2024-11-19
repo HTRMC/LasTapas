@@ -1,32 +1,7 @@
-import NextAuth from "next-auth"
-import type { AuthOptions } from "next-auth"
+import type { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 
-// Define custom types for NextAuth
-declare module "next-auth" {
-    interface User {
-      id: string
-      name?: string | null
-      role?: string
-    }
-  
-    interface Session {
-      user: {
-        id: string
-        name?: string | null
-        role?: string
-      }
-    }
-  }
-  
-  declare module "next-auth/jwt" {
-    interface JWT {
-      id: string
-      role?: string
-    }
-  }
-  
-const authOptions: AuthOptions = {
+export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: 'Credentials',
@@ -76,9 +51,3 @@ const authOptions: AuthOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET
 }
-
-const handler = NextAuth(authOptions)
-
-// Handle GET and POST requests
-export const GET = handler
-export const POST = handler

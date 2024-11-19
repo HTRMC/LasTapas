@@ -80,7 +80,7 @@ function MenuContent({ initialTableNumber }: { initialTableNumber: string | null
       setVisibleDishes(filteredDishes.map(dish => dish.id));
     }, 50);
     return () => clearTimeout(timer);
-  }, [activeCategory, activeDrinkSubcategory]);
+  }, [activeCategory, activeDrinkSubcategory, filteredDishes]);
 
   return (
     <main className={styles.container}>
