@@ -1,6 +1,7 @@
 // File: app/layout.tsx
 
-import '@/app/globals.css';
+import './globals.css';
+import { Providers } from './providers';
 
 export const metadata = {
   title: 'Las Tapas',
@@ -15,7 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

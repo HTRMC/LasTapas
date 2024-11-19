@@ -1,7 +1,7 @@
 // File: app/components/OrderForm.tsx
 
 import { useState } from 'react';
-import styles from '@/app/_components/OrderForm.module.css';
+import styles from './OrderForm.module.css';
 import React from 'react';
 import { Allergy } from '@/app/_lib/allergies';
 
