@@ -1,6 +1,0 @@
--- AlterTable
-ALTER TABLE "Order" ADD COLUMN     "isPaid" BOOLEAN NOT NULL DEFAULT false,
-ADD COLUMN     "paidAt" TIMESTAMP(3);
-
--- AlterTable
-ALTER TABLE "OrderItem" ADD COLUMN     "price" DECIMAL(65,30) NOT NULL DEFAULT 0;
