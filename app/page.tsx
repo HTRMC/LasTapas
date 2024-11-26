@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 
 export default function Home() {
   const [tableNumber, setTableNumber] = useState('');
-  const [setError] = useState('');
+  const [error, setError] = useState('');
   const router = useRouter();
 
   const MIN_TABLE = 1;
@@ -60,8 +60,8 @@ export default function Home() {
           id="tableNumber"
           type="number"
           value={tableNumber}
-          onChange={(e) => setTableNumber(e.target.value)}
-          className="w-full p-2 border rounded mb-4"
+          onChange={handleTableNumberChange}
+          className="w-full p-2 border rounded mb-4 ${error ? 'border-red-500' : 'border-gray-300'}"
           placeholder={`Enter table number (${MIN_TABLE}-${MAX_TABLE})`}
           min={MIN_TABLE}
           max={MAX_TABLE}
