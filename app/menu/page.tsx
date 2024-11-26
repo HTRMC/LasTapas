@@ -20,26 +20,13 @@ interface OrderItem extends Dish {
   quantity: number;
 }
 
-const dishes: Dish[] = [
-  { id: 1, name: 'Paella Valenciana', image: '/images/paella.avif', allergies: ['shellfish', 'gluten'], category: 'Main Courses' },
-  { id: 2, name: 'Gazpacho', image: '/images/gazpacho.avif', allergies: [], category: 'Appetizers' },
-  { id: 3, name: 'Tortilla Española', image: '/images/tortilla.avif', allergies: ['eggs'], category: 'Appetizers' },
-  { id: 4, name: 'Patatas Bravas', image: '/images/patatas-bravas.avif', allergies: ['eggs'], category: 'Side Dishes' },
-  { id: 5, name: 'Gambas al Ajillo', image: '/images/gambas.avif', allergies: ['shellfish'], category: 'Appetizers' },
-  { id: 6, name: 'Croquetas de Jamón', image: '/images/croquetas.avif', allergies: ['gluten', 'dairy'], category: 'Appetizers' },
-  { id: 7, name: 'Pulpo a la Gallega', image: '/images/pulpo.avif', allergies: ['shellfish'], category: 'Main Courses' },
-  { id: 8, name: 'Calamares a la Romana', image: '/images/calamares.avif', allergies: ['gluten', 'shellfish'], category: 'Appetizers' },
-  { id: 9, name: 'Churros con Chocolate', image: '/images/churros.avif', allergies: ['gluten', 'dairy'], category: 'Desserts' },
-  { id: 10, name: 'Sangria', image: '/images/sangria.avif', allergies: [], category: 'Drinks', subcategory: 'Alcoholic' },
-  { id: 11, name: 'Tinto de Verano', image: '/images/tinto-de-verano.avif', allergies: [], category: 'Drinks', subcategory: 'Alcoholic' },
-  { id: 12, name: 'Horchata', image: '/images/horchata.avif', allergies: ['nuts'], category: 'Drinks', subcategory: 'Non-Alcoholic' },
-  { id: 13, name: 'Café con Leche', image: '/images/cafe-con-leche.avif', allergies: ['dairy'], category: 'Drinks', subcategory: 'Hot Beverages' },
-];
-
 const categories = ['All', 'Appetizers', 'Main Courses', 'Side Dishes', 'Desserts', 'Drinks'];
 const drinkSubcategories = ['All Drinks', 'Alcoholic', 'Non-Alcoholic', 'Hot Beverages'];
 
 function MenuContent({ initialTableNumber }: { initialTableNumber: string | null }) {
+  const [dishes, setDishes] = useState<Dish[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [order, setOrder] = useState<OrderItem[]>([]);
   const [isOrderMenuOpen, setIsOrderMenuOpen] = useState(false);
   const [tableNumber, setTableNumber] = useState<string | null>(initialTableNumber);
@@ -81,6 +68,34 @@ function MenuContent({ initialTableNumber }: { initialTableNumber: string | null
     }, 50);
     return () => clearTimeout(timer);
   }, [activeCategory, activeDrinkSubcategory, filteredDishes]);
+
+  useEffect(() => {
+    async function fetchDishes() {
+      try {
+        const response = await fetch('/api/dishes');
+        if (!response.ok) {
+          throw new Error('Failed to fetch dishes');
+        }
+        const data = await response.json();
+        setDishes(data);
+      } catch (error) {
+        setError('Error loading menu items');
+        console.error('Error:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+  
+    fetchDishes();
+  }, []);
+
+  if (loading) {
+    return <div className={styles.loading}>Loading menu...</div>;
+  }
+  
+  if (error) {
+    return <div className={styles.error}>{error}</div>;
+  }
 
   return (
     <main className={styles.container}>

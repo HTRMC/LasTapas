@@ -30,6 +30,21 @@ model OrderItem {
   dishId   Int
   dishName String
   quantity Int
+  dish     Dish?  @relation(fields: [dishId], references: [id])
 
   @@index([orderId])
+  @@index([dishId])
+}
+
+model Dish {
+  id          Int         @id @default(autoincrement())
+  name        String
+  image       String
+  allergies   String[]
+  category    String
+  subcategory String?
+  orderItems  OrderItem[]
+  active      Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 }
