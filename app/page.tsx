@@ -7,13 +7,49 @@ import { useRouter } from 'next/navigation';
 
 export default function Home() {
   const [tableNumber, setTableNumber] = useState('');
+  const [error, setError] = useState('');
   const router = useRouter();
+
+  const MIN_TABLE = 1;
+  const MAX_TABLE = 50;
+
+  const handleTableNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setTableNumber(value);
+    
+    // Clear error when input is empty
+    if (!value) {
+      setError('');
+      return;
+    }
+
+    const numValue = parseInt(value);
+    if (isNaN(numValue)) {
+      setError('Please enter a valid number');
+    } else if (numValue < MIN_TABLE) {
+      setError(`Table number must be at least ${MIN_TABLE}`);
+    } else if (numValue > MAX_TABLE) {
+      setError(`Table number cannot exceed ${MAX_TABLE}`);
+    } else {
+      setError('');
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (tableNumber) {
-      router.push(`/menu?table=${tableNumber}`);
+    
+    const numValue = parseInt(tableNumber);
+    if (!tableNumber || isNaN(numValue)) {
+      setError('Please enter a valid table number');
+      return;
     }
+    
+    if (numValue < MIN_TABLE || numValue > MAX_TABLE) {
+      setError(`Please enter a table number between ${MIN_TABLE} and ${MAX_TABLE}`);
+      return;
+    }
+
+    router.push(`/menu?table=${numValue}`);
   };
 
   return (
@@ -21,11 +57,14 @@ export default function Home() {
       <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-md">
         <h1 className="text-2xl font-bold mb-4">Enter Table Number</h1>
         <input
+          id="tableNumber"
           type="number"
           value={tableNumber}
           onChange={(e) => setTableNumber(e.target.value)}
           className="w-full p-2 border rounded mb-4"
-          placeholder="Table Number"
+          placeholder={`Enter table number (${MIN_TABLE}-${MAX_TABLE})`}
+          min={MIN_TABLE}
+          max={MAX_TABLE}
           required
         />
         <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">
