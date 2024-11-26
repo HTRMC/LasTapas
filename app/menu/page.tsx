@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import styles from './MenuPage.module.css';
 import OrderForm from '@/app/_components/OrderForm';
@@ -53,30 +53,38 @@ function MenuContent({ initialTableNumber }: { initialTableNumber: string | null
 
   const totalItems = order.reduce((sum, item) => sum + item.quantity, 0);
 
-  const filteredDishes = dishes.filter(dish => {
-    if (activeCategory === 'All') return true;
-    if (activeCategory === 'Drinks') {
-      return dish.category === 'Drinks' && (activeDrinkSubcategory === 'All Drinks' || dish.subcategory === activeDrinkSubcategory);
-    }
-    return dish.category === activeCategory;
-  });
+  // Move filteredDishes to useMemo
+  const filteredDishes = useMemo(() => {
+    return dishes.filter(dish => {
+      if (activeCategory === 'All') return true;
+      if (activeCategory === 'Drinks') {
+        return dish.category === 'Drinks' && 
+          (activeDrinkSubcategory === 'All Drinks' || dish.subcategory === activeDrinkSubcategory);
+      }
+      return dish.category === activeCategory;
+    });
+  }, [dishes, activeCategory, activeDrinkSubcategory]);
 
+  // Only update visible dishes when filtered dishes change
   useEffect(() => {
-    setVisibleDishes([]);
+    const dishIds = filteredDishes.map(dish => dish.id);
+    setVisibleDishes([]); // Clear first
     const timer = setTimeout(() => {
-      setVisibleDishes(filteredDishes.map(dish => dish.id));
+      setVisibleDishes(dishIds);
     }, 50);
     return () => clearTimeout(timer);
-  }, [activeCategory, activeDrinkSubcategory, filteredDishes]);
+  }, [filteredDishes]);
 
   useEffect(() => {
     async function fetchDishes() {
       try {
+        console.log('Fetching dishes...');
         const response = await fetch('/api/dishes');
         if (!response.ok) {
           throw new Error('Failed to fetch dishes');
         }
         const data = await response.json();
+        console.log('Received dishes data:', data);
         setDishes(data);
       } catch (error) {
         setError('Error loading menu items');
@@ -106,11 +114,11 @@ function MenuContent({ initialTableNumber }: { initialTableNumber: string | null
         onClick={() => setIsOrderMenuOpen(!isOrderMenuOpen)}
       >
         <span>{isOrderMenuOpen ? '×' : '☰'}</span>
-      {!isOrderMenuOpen && totalItems > 0 && (
-        <span className={styles.notificationBadge}>
-          {totalItems > 9 ? '9+' : totalItems}
-        </span>
-      )}
+        {!isOrderMenuOpen && totalItems > 0 && (
+          <span className={styles.notificationBadge}>
+            {totalItems > 9 ? '9+' : totalItems}
+          </span>
+        )}
       </button>
 
       <div className={`${styles.orderMenu} ${isOrderMenuOpen ? styles.open : ''}`}>
