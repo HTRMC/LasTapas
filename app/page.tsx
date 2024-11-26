@@ -11,7 +11,7 @@ export default function Home() {
   const router = useRouter();
 
   const MIN_TABLE = 1;
-  const MAX_TABLE = 50;
+  const MAX_TABLE = 69;
 
   const handleTableNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -62,7 +62,7 @@ export default function Home() {
           value={tableNumber}
           onChange={handleTableNumberChange}
           className="w-full p-2 border rounded mb-4 ${error ? 'border-red-500' : 'border-gray-300'}"
-          placeholder={`Enter table number (${MIN_TABLE}-${MAX_TABLE})`}
+          placeholder={` Enter table number (${MIN_TABLE}-${MAX_TABLE})`}
           min={MIN_TABLE}
           max={MAX_TABLE}
           required
