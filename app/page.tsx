@@ -67,6 +67,11 @@ export default function Home() {
           max={MAX_TABLE}
           required
         />
+        {error && (
+            <p className="mt-1 text-sm text-red-600">
+              {error}
+            </p>
+          )}
         <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">
           Go to Menu
         </button>
