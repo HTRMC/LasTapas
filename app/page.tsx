@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 
 export default function Home() {
   const [tableNumber, setTableNumber] = useState('');
-  const [error, setError] = useState('');
+  const [setError] = useState('');
   const router = useRouter();
 
   const MIN_TABLE = 1;
