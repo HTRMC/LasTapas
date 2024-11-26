@@ -91,20 +91,40 @@ const dishes = [
 
 async function main() {
     console.log('Starting seeding...');
-
+    
     for (const dish of dishes) {
-        const created = await prisma.dish.create({
-            data: dish,
-        });
-        console.log(`Created dish with id: ${created.id}`);
+        try {
+            const existing = await prisma.dish.findFirst({
+                where: {
+                    name: dish.name
+                }
+            });
+
+            if (existing) {
+                const updated = await prisma.dish.update({
+                    where: { id: existing.id },
+                    data: dish
+                });
+                console.log(`Updated dish: ${updated.name} (ID: ${updated.id})`);
+            } else {
+                const created = await prisma.dish.create({
+                    data: dish
+                });
+                console.log(`Created dish: ${created.name} (ID: ${created.id})`);
+            }
+        } catch (error) {
+            console.error(`Error seeding dish ${dish.name}:`, error);
+            continue;
+        }
     }
 
-    console.log('Seeding finished.');
+    const totalDishes = await prisma.dish.count();
+    console.log(`Seeding finished. Total dishes in database: ${totalDishes}`);
 }
 
 main()
     .catch((e) => {
-        console.error(e);
+        console.error('Fatal error during seeding:', e);
         process.exit(1);
     })
     .finally(async () => {
