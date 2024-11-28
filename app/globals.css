@@ -18,6 +18,14 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: "Joti One";
+  src: url('/_fonts/JotiOne.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --red: #B71C1C;
   --light-blue: #B3E5FC;
