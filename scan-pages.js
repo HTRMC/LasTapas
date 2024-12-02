@@ -1,65 +1,73 @@
-const fs = require('fs');
-const path = require('path');
+import { readdir, stat } from 'fs/promises';
+import { join, extname, basename } from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
-function getAllPages(directory = './app', baseRoute = '') {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const BASE_URL = 'http://localhost:3000';
+
+async function getAllPages(directory = './app', baseRoute = '') {
   let routes = [];
   
-  // Read directory contents
-  const items = fs.readdirSync(directory);
-  
-  for (const item of items) {
-    const fullPath = path.join(directory, item);
-    const stat = fs.statSync(fullPath);
+  try {
+    const items = await readdir(directory);
     
-    if (stat.isDirectory()) {
-      // Skip special Next.js directories
-      if (['api', '_app', '_document', 'public', 'node_modules'].includes(item)) {
-        continue;
-      }
+    for (const item of items) {
+      const fullPath = join(directory, item);
+      const stats = await stat(fullPath);
       
-      // Handle dynamic routes
-      let currentRoute = item;
-      if (item.startsWith('[') && item.endsWith(']')) {
-        currentRoute = ':' + item.slice(1, -1);
-      }
-      
-      // Recursively scan subdirectories
-      const childRoutes = getAllPages(
-        fullPath,
-        path.join(baseRoute, currentRoute)
-      );
-      routes = routes.concat(childRoutes);
-      
-    } else if (stat.isFile()) {
-      // Check for page files
-      const ext = path.extname(item);
-      const name = path.basename(item, ext);
-      
-      if (
-        ['.js', '.jsx', '.ts', '.tsx'].includes(ext) &&
-        ['page', 'index'].includes(name)
-      ) {
-        let route = baseRoute;
-        if (name !== 'index') {
-          route = path.join(baseRoute, name);
+      if (stats.isDirectory()) {
+        if (['api', '_app', '_document', 'public', 'node_modules'].includes(item)) {
+          continue;
         }
         
-        // Clean up the route format
-        route = route.replace(/\\/g, '/');
-        if (!route.startsWith('/')) {
-          route = '/' + route;
+        let currentRoute = item;
+        if (item.startsWith('[') && item.endsWith(']')) {
+          currentRoute = ':' + item.slice(1, -1);
         }
         
-        routes.push(route);
+        const childRoutes = await getAllPages(
+          fullPath,
+          join(baseRoute, currentRoute)
+        );
+        routes = routes.concat(childRoutes);
+        
+      } else if (stats.isFile()) {
+        const ext = extname(item);
+        const name = basename(item, ext);
+        
+        if (
+          ['.js', '.jsx', '.ts', '.tsx'].includes(ext) &&
+          ['page', 'index'].includes(name)
+        ) {
+          let route = baseRoute;
+          if (name !== 'index') {
+            route = join(baseRoute, name);
+          }
+          
+          route = route.replace(/\\/g, '/');
+          if (!route.startsWith('/')) {
+            route = '/' + route;
+          }
+          
+          // Format route with localhost URL
+          const fullUrl = `${BASE_URL}${route}`;
+          routes.push(fullUrl);
+        }
       }
     }
+    
+    return routes.sort();
+  } catch (error) {
+    console.error(`Error scanning directory ${directory}:`, error);
+    throw error;
   }
-  
-  return routes.sort();
 }
 
 try {
-  const pages = getAllPages();
+  const pages = await getAllPages();
   console.log('Available pages in your Next.js application:');
   pages.forEach(route => console.log(route));
 } catch (error) {
