@@ -21,16 +21,50 @@ interface YearlyOverviewProps {
   };
 }
 
+interface MonthlyDataItem {
+  month: string;
+  year: number;
+  orders: number;
+  timestamp: number;
+}
+
+interface MonthlyDataMap {
+  [key: string]: MonthlyDataItem;
+}
+
 export default function YearlyOverview({ stats }: YearlyOverviewProps) {
   const [selectedChart, setSelectedChart] = useState('line');
   
-  const monthlyData = stats.monthlyOrders.map(order => ({
-    month: new Date(order.createdAt).toLocaleString('default', { month: 'short' }),
-    orders: order._count.id,
+  // Process monthly data with proper date handling
+  const monthlyData = stats.monthlyOrders
+    .map(order => ({
+      date: new Date(order.createdAt),
+      orders: order._count.id
+    }))
+    .reduce((acc: MonthlyDataMap, curr) => {
+      const key = `${curr.date.getFullYear()}-${curr.date.getMonth()}`;
+      if (!acc[key]) {
+        acc[key] = {
+          month: curr.date.toLocaleString('default', { month: 'short' }),
+          year: curr.date.getFullYear(),
+          orders: 0,
+          timestamp: curr.date.getTime()
+        };
+      }
+      acc[key].orders += curr.orders;
+      return acc;
+    }, {});
+
+  // Convert to array and sort by date
+  const processedMonthlyData = Object.values(monthlyData)
+  .sort((a, b) => a.timestamp - b.timestamp)
+  .map(item => ({
+    month: `${item.month} ${item.year}`,
+    orders: item.orders
   }));
 
   const totalRevenue = stats.totalOrders * 25; // Assuming average order value
-  const avgOrdersPerMonth = Math.round(stats.totalOrders / monthlyData.length);
+  const avgOrdersPerMonth = Math.round(stats.totalOrders / processedMonthlyData.length)
 
   return (
     <div className="space-y-6">
@@ -97,7 +131,7 @@ export default function YearlyOverview({ stats }: YearlyOverviewProps) {
             <div className="h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
                 {selectedChart === 'line' ? (
-                  <LineChart data={monthlyData}>
+                  <LineChart data={processedMonthlyData}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="month" />
                     <YAxis />
@@ -113,7 +147,7 @@ export default function YearlyOverview({ stats }: YearlyOverviewProps) {
                     />
                   </LineChart>
                 ) : (
-                  <BarChart data={monthlyData}>
+                  <BarChart data={processedMonthlyData}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="month" />
                     <YAxis />
